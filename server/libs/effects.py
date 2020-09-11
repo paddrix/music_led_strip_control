@@ -1248,7 +1248,7 @@ class Effects():
         r = np.array([j for i in zip(r,r) for j in i])
         output = np.array([self._color_service.full_gradients[effect_config["color_mode"]][0, :led_count]*r,
                            self._color_service.full_gradients[effect_config["color_mode"]][1, :led_count]*r,
-                           self._color_service.full_gradients[effect_config["color_mode"]][2, :led_count]*r],
+                           self._color_service.full_gradients[effect_config["color_mode"]][2, :led_count]*r,
                            self._color_service.full_gradients[effect_config["color_mode"]][3, :led_count]*r])
         # if there's a high (eg clap):
         if self.current_freq_detects["high"]:
