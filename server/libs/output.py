@@ -164,7 +164,7 @@ class Output:
         r = np.left_shift(output_array[1][:].astype(int), 16) # pylint: disable=assignment-from-no-return
         b = np.left_shift(output_array[0][:].astype(int), 8) # pylint: disable=assignment-from-no-return    
         w = output_array[2][:].astype(int)
-        rgbw = np.bitwise_or((np.bitwise_or(np.bitwise_or(r, g), b), w).astype(int)
+        rgbw = np.bitwise_or(np.bitwise_or(np.bitwise_or(r, g), b), w).astype(int)
 
         # You can only use ws2811_leds_set with the custom version.
         #ws.ws2811_leds_set(self.channel, rgb)
