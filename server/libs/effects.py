@@ -1006,9 +1006,8 @@ class Effects():
             del prev_output_array
         self._output_queue.put(output_array)
         self._output_queue_lock.release()
-# ========== TODO ==========
 
-    def effect_energy(self):    
+    def effect_energy(self):        # TODO: change to RGBW
         effect_config = self._config["effects"]["effect_energy"]
         led_count = self._config["device_config"]["LED_Count"]
         led_mid = self._config["device_config"]["LED_Mid"]
@@ -1108,6 +1107,9 @@ class Effects():
                                     (None if effect_config["reverse_grad"] else led_count):]*r,
                            self._color_service.full_gradients[effect_config["color_mode"]][2][
                                     (led_count if effect_config["reverse_grad"] else 0):
+                                    (None if effect_config["reverse_grad"] else led_count):]*r,
+                            self._color_service.full_gradients[effect_config["color_mode"]][3][
+                                    (led_count if effect_config["reverse_grad"] else 0):
                                     (None if effect_config["reverse_grad"] else led_count):]*r])
         
         # Calculate how many steps the array will roll
@@ -1120,6 +1122,7 @@ class Effects():
         output[0] = gaussian_filter1d(output[0], sigma=effect_config["blur"])
         output[1] = gaussian_filter1d(output[1], sigma=effect_config["blur"])
         output[2] = gaussian_filter1d(output[2], sigma=effect_config["blur"])
+        output[3] = gaussian_filter1d(output[3], sigma=effect_config["blur"])
         if effect_config["flip_lr"]:
             output = np.fliplr(output)
         
@@ -1300,7 +1303,7 @@ class Effects():
         self._output_queue_lock.release()
 
 
-    def effect_beat(self):
+    def effect_beat(self):  # TODO: change to RGBW
         effect_config = self._config["effects"]["effect_beat"]
         led_count = self._config["device_config"]["LED_Count"]
 
@@ -1339,7 +1342,7 @@ class Effects():
 
         self.prev_output = output
 
-    def effect_wave(self):
+    def effect_wave(self):  # TODO: change to RGBW
         effect_config = self._config["effects"]["effect_wave"]
         led_count = self._config["device_config"]["LED_Count"]
 
