@@ -1007,7 +1007,7 @@ class Effects():
         self._output_queue.put(output_array)
         self._output_queue_lock.release()
 
-    def effect_energy(self):        # TODO: change to RGBW
+    def effect_energy(self):        # only RGB
         effect_config = self._config["effects"]["effect_energy"]
         led_count = self._config["device_config"]["LED_Count"]
         led_mid = self._config["device_config"]["LED_Mid"]
@@ -1303,7 +1303,7 @@ class Effects():
         self._output_queue_lock.release()
 
 
-    def effect_beat(self):  # TODO: change to RGBW
+    def effect_beat(self):
         effect_config = self._config["effects"]["effect_beat"]
         led_count = self._config["device_config"]["LED_Count"]
 
@@ -1324,7 +1324,7 @@ class Effects():
 
         """Effect that flashes to the beat"""
         if self.current_freq_detects["beat"]:
-            output = np.zeros((3,led_count))
+            output = np.zeros((4,led_count))
             output[0][:]=self._color_service.colour(effect_config["color"])[0]
             output[1][:]=self._color_service.colour(effect_config["color"])[1]
             output[2][:]=self._color_service.colour(effect_config["color"])[2]
@@ -1342,7 +1342,7 @@ class Effects():
 
         self.prev_output = output
 
-    def effect_wave(self):  # TODO: change to RGBW
+    def effect_wave(self):
         effect_config = self._config["effects"]["effect_wave"]
         led_count = self._config["device_config"]["LED_Count"]
 
@@ -1363,7 +1363,7 @@ class Effects():
 
         """Effect that flashes to the beat with scrolling coloured bits"""
         if self.current_freq_detects["beat"]:
-            output = np.zeros((3,led_count))
+            output = np.zeros((4,led_count))
             output[0][:]=self._color_service.colour(effect_config["color_flash"])[0]
             output[1][:]=self._color_service.colour(effect_config["color_flash"])[1]
             output[2][:]=self._color_service.colour(effect_config["color_flash"])[2]
