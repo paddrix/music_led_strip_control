@@ -158,6 +158,7 @@ class Output:
 
         # Typecast the array to int
         output_array = output_array.clip(0, 255).astype(int)
+        print(output_array)
 
         # sort the colors. grb
         w = np.left_shift(output_array[3][:].astype(int), 24) # pylint: disable=assignment-from-no-return
@@ -165,7 +166,7 @@ class Output:
         r = np.left_shift(output_array[0][:].astype(int), 8) # pylint: disable=assignment-from-no-return    
         b = output_array[2][:].astype(int)
         rgbw = np.bitwise_or(np.bitwise_or(np.bitwise_or(r, w), g), b).astype(int)
-        
+        print(rgbw)
         # You can only use ws2811_leds_set with the custom version.
         #ws.ws2811_leds_set(self.channel, rgb)
         for i in range(self._led_count):
