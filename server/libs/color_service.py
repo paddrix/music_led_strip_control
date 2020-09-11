@@ -66,7 +66,7 @@ class ColorService():
         pad = length - (n_transitions * ease_length)
         output = np.zeros((4, length))
         ease = np.array([_easing_func(i, ease_length, slope=2.5) for i in range(ease_length)])
-        # for r,g,b
+        # for r,g,b,w
         for i in range(4):
             # for each transition
             for j in range(n_transitions):
@@ -102,7 +102,7 @@ class ColorService():
             return self._config["colours"][colour]
         else:
             print("colour {} has not been defined".format(colour))
-            return (0,0,0)
+            return (0,0,0,0)
 
     def build_slidearrays(self):
         led_count = self._config["device_config"]["LED_Count"]        

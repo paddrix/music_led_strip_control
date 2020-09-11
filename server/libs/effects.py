@@ -398,7 +398,7 @@ class Effects():
 
     def effect_off(self):
         # Build an empty array
-        output_array = np.zeros((3, self._config["device_config"]["LED_Count"]))
+        output_array = np.zeros((4, self._config["device_config"]["LED_Count"]))
 
         
         self._output_queue.put(output_array)
@@ -1175,14 +1175,14 @@ class Effects():
         for i in range(effect_config["resolution"]):
             # [r,g,b] values from a multicolour gradient array at [resulution] equally spaced intervals
             color_sets.append([self._color_service.full_gradients[effect_config["color_mode"]]\
-                              [j][i*(led_count//effect_config["resolution"])] for j in range(3)])
-        output = np.zeros((3,led_count))
+                              [j][i*(led_count//effect_config["resolution"])] for j in range(4)])
+        output = np.zeros((4,led_count))
         chunks = np.array_split(output[0], effect_config["resolution"])
         n = 0
         # Assign blocks with heights corresponding to max_values and colours from color_sets
         for i in range(len(chunks)):
             m = len(chunks[i])
-            for j in range(3):
+            for j in range(4):
                 output[j][n:n+m] = color_sets[i][j]*max_values[i]
             n += m
 
@@ -1248,7 +1248,8 @@ class Effects():
         r = np.array([j for i in zip(r,r) for j in i])
         output = np.array([self._color_service.full_gradients[effect_config["color_mode"]][0, :led_count]*r,
                            self._color_service.full_gradients[effect_config["color_mode"]][1, :led_count]*r,
-                           self._color_service.full_gradients[effect_config["color_mode"]][2, :led_count]*r])
+                           self._color_service.full_gradients[effect_config["color_mode"]][2, :led_count]*r],
+                           self._color_service.full_gradients[effect_config["color_mode"]][3, :led_count]*r])
         # if there's a high (eg clap):
         if self.current_freq_detects["high"]:
             self.power_brightness = 1.0
@@ -1259,6 +1260,7 @@ class Effects():
             output[0, index] = int(self._color_service.colour(effect_config["s_color"])[0]*self.power_brightness)
             output[1, index] = int(self._color_service.colour(effect_config["s_color"])[1]*self.power_brightness)
             output[2, index] = int(self._color_service.colour(effect_config["s_color"])[2]*self.power_brightness)
+            output[3, index] = int(self._color_service.colour(effect_config["s_color"])[3]*self.power_brightness)
         # Remove some of the indexes for next time
         self.power_indexes = [i for i in self.power_indexes if i not in random.sample(self.power_indexes, len(self.power_indexes)//4)]
         if len(self.power_indexes) <= 4:
@@ -1272,6 +1274,7 @@ class Effects():
         output[0][:strip_len] = self._color_service.full_gradients[effect_config["color_mode"]][0][strip_len]
         output[1][:strip_len] = self._color_service.full_gradients[effect_config["color_mode"]][1][strip_len]
         output[2][:strip_len] = self._color_service.full_gradients[effect_config["color_mode"]][2][strip_len]
+        output[3][:strip_len] = self._color_service.full_gradients[effect_config["color_mode"]][3][strip_len]
         if effect_config["flip_lr"]:
             output = np.fliplr(output)
         
@@ -1322,6 +1325,7 @@ class Effects():
             output[0][:]=self._color_service.colour(effect_config["color"])[0]
             output[1][:]=self._color_service.colour(effect_config["color"])[1]
             output[2][:]=self._color_service.colour(effect_config["color"])[2]
+            output[3][:]=self._color_service.colour(effect_config["color"])[3]
         else:
             output = np.copy(self.prev_output)
             output = np.multiply(self.prev_output,effect_config["decay"])
@@ -1360,6 +1364,7 @@ class Effects():
             output[0][:]=self._color_service.colour(effect_config["color_flash"])[0]
             output[1][:]=self._color_service.colour(effect_config["color_flash"])[1]
             output[2][:]=self._color_service.colour(effect_config["color_flash"])[2]
+            output[3][:]=self._color_service.colour(effect_config["color_flash"])[3]
             self.wave_wipe_count = effect_config["wipe_len"]
         else:
             output = np.copy(self.prev_output)
@@ -1373,6 +1378,8 @@ class Effects():
                 output[1][-i]=self._color_service.colour(effect_config["color_wave"])[1]
                 output[2][i]=self._color_service.colour(effect_config["color_wave"])[2]
                 output[2][-i]=self._color_service.colour(effect_config["color_wave"])[2]
+                output[3][i]=self._color_service.colour(effect_config["color_wave"])[3]
+                output[3][-i]=self._color_service.colour(effect_config["color_wave"])[3]
             #output = np.concatenate([output,np.fliplr(output)], axis=1)
             if self.wave_wipe_count > led_count//2:
                 self.wave_wipe_count = led_count//2
