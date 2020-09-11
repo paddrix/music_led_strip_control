@@ -46,6 +46,8 @@ class Output:
         ws.ws2811_channel_t_invert_set(self.channel, self._led_invert)
         ws.ws2811_channel_t_brightness_set(self.channel, self._led_brightness_translated)
        
+        ws.ws2811_channel_t_strip_type_set(self.channel, ws.SK6812_STRIP_RGBW)
+
         ws.ws2811_t_freq_set(self._leds, self._led_freq_hz)
         ws.ws2811_t_dmanum_set(self._leds, self._led_dma)
 
@@ -158,15 +160,16 @@ class Output:
         output_array = output_array.clip(0, 255).astype(int)
 
         # sort the colors. grb
-        g = np.left_shift(output_array[1][:].astype(int), 16) # pylint: disable=assignment-from-no-return
-        r = np.left_shift(output_array[0][:].astype(int), 8) # pylint: disable=assignment-from-no-return    
-        b = output_array[2][:].astype(int)
-        rgb = np.bitwise_or(np.bitwise_or(r, g), b).astype(int)
+        g = np.left_shift(output_array[2][:].astype(int), 24) # pylint: disable=assignment-from-no-return
+        r = np.left_shift(output_array[1][:].astype(int), 16) # pylint: disable=assignment-from-no-return
+        b = np.left_shift(output_array[0][:].astype(int), 8) # pylint: disable=assignment-from-no-return    
+        w = output_array[2][:].astype(int)
+        rgbw = np.bitwise_or((np.bitwise_or(np.bitwise_or(r, g), b), w).astype(int)
 
         # You can only use ws2811_leds_set with the custom version.
         #ws.ws2811_leds_set(self.channel, rgb)
         for i in range(self._led_count):
-            ws.ws2811_led_set(self.channel, i, rgb[i].item())
+            ws.ws2811_led_set(self.channel, i, rgbw[i].item())
 
 
         resp = ws.ws2811_render(self._leds)

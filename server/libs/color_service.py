@@ -64,10 +64,10 @@ class ColorService():
         n_transitions = len(colors) - 1
         ease_length = length // n_transitions
         pad = length - (n_transitions * ease_length)
-        output = np.zeros((3, length))
+        output = np.zeros((4, length))
         ease = np.array([_easing_func(i, ease_length, slope=2.5) for i in range(ease_length)])
         # for r,g,b
-        for i in range(3):
+        for i in range(4):
             # for each transition
             for j in range(n_transitions):
                 # Starting ease value
@@ -92,7 +92,7 @@ class ColorService():
         output = np.asarray(output, dtype=int)
         # pad out the ends (bit messy but it works and looks good)
         if pad:
-            for i in range(3):
+            for i in range(4):
                 output[i, -pad:] = output[i, -pad-1]
         return output
 
@@ -115,7 +115,8 @@ class ColorService():
                 currentColorArray = np.array([
                     [color[0] for i in range(led_count)],
                     [color[1] for i in range(led_count)],
-                    [color[2] for i in range(led_count)]
+                    [color[2] for i in range(led_count)],
+                    [color[3] for i in range(led_count)]
                 ])
 
                 if not gradient in self.full_slide:
@@ -138,7 +139,7 @@ class ColorService():
             steps_between_bubbles = int(led_count / (gradient_color_count * effect_config["bubble_repeat"]))
 
             # First build black array:
-            self.full_bubble[gradient] = np.zeros((3, led_count))
+            self.full_bubble[gradient] = np.zeros((4, led_count))
 
             for color in self._config["gradients"][gradient]:
                 
@@ -159,6 +160,7 @@ class ColorService():
                     self.full_bubble[gradient][0][start_index:end_index] = color[0]
                     self.full_bubble[gradient][1][start_index:end_index] = color[1]
                     self.full_bubble[gradient][2][start_index:end_index] = color[2]
+                    self.full_bubble[gradient][3][start_index:end_index] = color[3]
                     
                 current_color = current_color + 1
 

@@ -74,15 +74,15 @@ class Effects():
         self.beat_count = 0
         self.freq_channels = [deque(maxlen=self.freq_channel_history) for i in range(n_fft_bins)]
 
-        self.output = np.array([[0 for i in range(led_count)] for i in range(3)])
-        self.prev_output = np.array([[0 for i in range(led_count)] for i in range(3)])
+        self.output = np.array([[0 for i in range(led_count)] for i in range(4)])
+        self.prev_output = np.array([[0 for i in range(led_count)] for i in range(4)])
 
         self.speed_counter = 0
 
         # Twinkle Variables
         self.rising_stars = []
         self.descending_stars = []
-        self.output_decay = np.array([[0 for i in range(led_count)] for i in range(3)])
+        self.output_decay = np.array([[0 for i in range(led_count)] for i in range(4)])
 
         # Pendulum Variables
         self.current_direction = True
@@ -94,9 +94,9 @@ class Effects():
         self.count_since_last_rod = 0
 
         # Scroll Variables
-        self.output_scroll_high = np.array([[0 for i in range(led_count)] for i in range(3)])
-        self.output_scroll_mid = np.array([[0 for i in range(led_count)] for i in range(3)])
-        self.output_scroll_low = np.array([[0 for i in range(led_count)] for i in range(3)])
+        self.output_scroll_high = np.array([[0 for i in range(led_count)] for i in range(4)])
+        self.output_scroll_mid = np.array([[0 for i in range(led_count)] for i in range(4)])
+        self.output_scroll_low = np.array([[0 for i in range(led_count)] for i in range(4)])
 
         self.current_freq_detects = {"beat":False,
                                      "low":False,
@@ -286,13 +286,13 @@ class Effects():
         self.beat_count = 0
         self.freq_channels = [deque(maxlen=self.freq_channel_history) for i in range(n_fft_bins)]
 
-        self.output = np.array([[0 for i in range(led_count)] for i in range(3)])
-        self.prev_output = np.array([[0 for i in range(led_count)] for i in range(3)])
+        self.output = np.array([[0 for i in range(led_count)] for i in range(4)])
+        self.prev_output = np.array([[0 for i in range(led_count)] for i in range(4)])
 
         # Twinkle Variables
         self.rising_stars = []
         self.descending_stars = []
-        self.output_decay = np.array([[0 for i in range(led_count)] for i in range(3)])
+        self.output_decay = np.array([[0 for i in range(led_count)] for i in range(4)])
 
         # Pendulum Variables
         self.current_direction = True
@@ -304,9 +304,9 @@ class Effects():
         self.count_since_last_rod = 0
 
         # Scroll Variables
-        self.output_scroll_high = np.array([[0 for i in range(led_count)] for i in range(3)])
-        self.output_scroll_mid = np.array([[0 for i in range(led_count)] for i in range(3)])
-        self.output_scroll_low = np.array([[0 for i in range(led_count)] for i in range(3)])
+        self.output_scroll_high = np.array([[0 for i in range(led_count)] for i in range(4)])
+        self.output_scroll_mid = np.array([[0 for i in range(led_count)] for i in range(4)])
+        self.output_scroll_low = np.array([[0 for i in range(led_count)] for i in range(4)])
 
 
         self.current_freq_detects = {"beat":False,
@@ -417,6 +417,7 @@ class Effects():
         output_array[0][:]=self._config_colours[effect_config["color"]][0]
         output_array[1][:]=self._config_colours[effect_config["color"]][1]
         output_array[2][:]=self._config_colours[effect_config["color"]][2]
+        output_array[3][:]=self._config_colours[effect_config["color"]][3]
 
         # Add the output array to the queue
         self._output_queue_lock.acquire()
@@ -449,7 +450,8 @@ class Effects():
         output_array = np.array(
             [   full_gradient_ref[current_gradient][0][:led_count],
                 full_gradient_ref[current_gradient][1][:led_count],
-                full_gradient_ref[current_gradient][2][:led_count]
+                full_gradient_ref[current_gradient][2][:led_count],
+                full_gradient_ref[current_gradient][3][:led_count]
             ])
         
         # Calculate how many steps the array will roll
@@ -506,12 +508,14 @@ class Effects():
         current_color_r = full_gradient_ref[current_gradient][0][0]
         current_color_g = full_gradient_ref[current_gradient][1][0]
         current_color_b = full_gradient_ref[current_gradient][2][0]
+        current_color_w = full_gradient_ref[current_gradient][3][0]
 
         # Fill the whole strip with the color.
         output_array = np.array([
             [current_color_r for i in range(led_count)],
             [current_color_g for i in range(led_count)],
-            [current_color_b for i in range(led_count)]
+            [current_color_b for i in range(led_count)],
+            [current_color_w for i in range(led_count)]
         ])
 
         # Calculate how many steps the array will roll
@@ -549,7 +553,8 @@ class Effects():
         output_array = np.array(
             [   full_slide_ref[effect_config["gradient"]][0][:led_count],
                 full_slide_ref[effect_config["gradient"]][1][:led_count],
-                full_slide_ref[effect_config["gradient"]][2][:led_count]
+                full_slide_ref[effect_config["gradient"]][2][:led_count],
+                full_slide_ref[effect_config["gradient"]][3][:led_count]
             ])
 
         # Calculate how many steps the array will roll
@@ -602,7 +607,8 @@ class Effects():
         output_array = np.array(
             [   full_bubble_ref[effect_config["gradient"]][0][:led_count],
                 full_bubble_ref[effect_config["gradient"]][1][:led_count],
-                full_bubble_ref[effect_config["gradient"]][2][:led_count]
+                full_bubble_ref[effect_config["gradient"]][2][:led_count],
+                full_bubble_ref[effect_config["gradient"]][3][:led_count]
             ])
 
         # Calculate how many steps the array will roll
@@ -642,7 +648,7 @@ class Effects():
         # Rising Star array format: [[r,g,b], [start_position, end_position], percent_brightness]
 
         # Reset output array
-        self.output = np.zeros((3, self._config["device_config"]["LED_Count"]))
+        self.output = np.zeros((4, self._config["device_config"]["LED_Count"]))
 
 
         # Random add off the stars, depending on speed settings
@@ -680,6 +686,7 @@ class Effects():
                 self.output[0, current_star[1][0]:current_star[1][1]] = int(current_star[0][0] * (current_star[2]/100))
                 self.output[1, current_star[1][0]:current_star[1][1]] = int(current_star[0][1] * (current_star[2]/100))
                 self.output[2, current_star[1][0]:current_star[1][1]] = int(current_star[0][2] * (current_star[2]/100))
+                self.output[3, current_star[1][0]:current_star[1][1]] = int(current_star[0][3] * (current_star[2]/100))
 
         # remove the stars from the rising array
         for current_star_to_remove in remove_stars_rising:
@@ -700,6 +707,7 @@ class Effects():
             self.output[0, current_star[1][0]:current_star[1][1]] = int(current_star[0][0] * (current_star[2]/100))
             self.output[1, current_star[1][0]:current_star[1][1]] = int(current_star[0][1] * (current_star[2]/100))
             self.output[2, current_star[1][0]:current_star[1][1]] = int(current_star[0][2] * (current_star[2]/100))
+            self.output[3, current_star[1][0]:current_star[1][1]] = int(current_star[0][3] * (current_star[2]/100))
 
         # remove the stars from the descending array
         for current_star_to_remove in remove_stars_descending:
@@ -732,7 +740,7 @@ class Effects():
                 self.current_color = self._color_service.colour(effect_config["color"])
 
         # Build an empty array
-        output_array = np.zeros((3, self._config["device_config"]["LED_Count"]))
+        output_array = np.zeros((4, self._config["device_config"]["LED_Count"]))
 
         # Calculate how many steps the array will roll
         steps = self.get_roll_steps(effect_config["speed"])
@@ -760,6 +768,7 @@ class Effects():
             output_array[0, end_position:start_position] = self.current_color[0]
             output_array[1, end_position:start_position] = self.current_color[1]
             output_array[2, end_position:start_position] = self.current_color[2]
+            output_array[3, end_position:start_position] = self.current_color[3]
 
         else:
             # end                                                       start
@@ -784,6 +793,7 @@ class Effects():
             output_array[0, start_position:end_position] = self.current_color[0]
             output_array[1, start_position:end_position] = self.current_color[1]
             output_array[2, start_position:end_position] = self.current_color[2]
+            output_array[3, start_position:end_position] = self.current_color[3]
 
 
         # Add the output array to the queue
@@ -813,14 +823,14 @@ class Effects():
         # Move array <--- this direction for "steps" fields
 
         # Build an empty array
-        local_output_array = np.zeros((3, self._config["device_config"]["LED_Count"]))
+        local_output_array = np.zeros((4, self._config["device_config"]["LED_Count"]))
 
         if not effect_config["reverse"]:
             self.output = np.roll(self.output,steps,axis = 1)
-            self.output[:, :steps] = np.zeros((3, steps))
+            self.output[:, :steps] = np.zeros((4, steps))
         else:
             self.output = np.roll(self.output,steps * -1,axis = 1)
-            self.output[:, led_count - steps:] = np.zeros((3, steps))
+            self.output[:, led_count - steps:] = np.zeros((4, steps))
 
         if (self.count_since_last_rod - effect_config["rods_length"]) > effect_config["rods_distance"]:
             self.count_since_last_rod = 0
@@ -844,10 +854,12 @@ class Effects():
                 self.output[0, :steps] = self.current_color[0]
                 self.output[1, :steps] = self.current_color[1]
                 self.output[2, :steps] = self.current_color[2]
+                self.output[3, :steps] = self.current_color[3]
             else:
                 self.output[0, led_count - steps:] = self.current_color[0]
                 self.output[1, led_count - steps:] = self.current_color[1]
                 self.output[2, led_count - steps:] = self.current_color[2]
+                self.output[3, led_count - steps:] = self.current_color[3]
 
         local_output_array = self.output
 
@@ -944,6 +956,7 @@ class Effects():
             self.output_scroll_high[0, :high_steps] = high_val[0]
             self.output_scroll_high[1, :high_steps] = high_val[1]
             self.output_scroll_high[2, :high_steps] = high_val[2]
+            self.output_scroll_high[3, :high_steps] = high_val[3]
         
         if(mid_steps > 0):
             self.output_scroll_mid[:, mid_steps:] = self.output_scroll_mid[:, :-mid_steps]
@@ -952,6 +965,7 @@ class Effects():
             self.output_scroll_mid[0, :mid_steps] = mids_val[0]
             self.output_scroll_mid[1, :mid_steps] = mids_val[1]
             self.output_scroll_mid[2, :mid_steps] = mids_val[2]
+            self.output_scroll_mid[3, :mid_steps] = mids_val[3]
 
         if(low_steps > 0):
             self.output_scroll_low[:, low_steps:] = self.output_scroll_low[:, :-low_steps]
@@ -960,10 +974,12 @@ class Effects():
             self.output_scroll_low[0, :low_steps] = lows_val[0]
             self.output_scroll_low[1, :low_steps] = lows_val[1]
             self.output_scroll_low[2, :low_steps] = lows_val[2]
+            self.output_scroll_low[3, :low_steps] = lows_val[3]
 
         self.output[0] = self.output_scroll_high[0] + self.output_scroll_mid[0] + self.output_scroll_low[0]
         self.output[1] = self.output_scroll_high[1] + self.output_scroll_mid[1] + self.output_scroll_low[1]
         self.output[2] = self.output_scroll_high[2] + self.output_scroll_mid[2] + self.output_scroll_low[2]
+        self.output[3] = self.output_scroll_high[3] + self.output_scroll_mid[3] + self.output_scroll_low[3]
 
         self.output = (self.output * effect_config["decay"]).astype(int)
         self.output = gaussian_filter1d(self.output, sigma=effect_config["blur"])
@@ -990,8 +1006,9 @@ class Effects():
             del prev_output_array
         self._output_queue.put(output_array)
         self._output_queue_lock.release()
-   
-    def effect_energy(self):
+# ========== TODO ==========
+
+    def effect_energy(self):    
         effect_config = self._config["effects"]["effect_energy"]
         led_count = self._config["device_config"]["LED_Count"]
         led_mid = self._config["device_config"]["LED_Mid"]
