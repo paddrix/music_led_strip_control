@@ -160,11 +160,11 @@ class Output:
         output_array = output_array.clip(0, 255).astype(int)
 
         # sort the colors. grb
-        g = np.left_shift(output_array[2][:].astype(int), 24) # pylint: disable=assignment-from-no-return
-        r = np.left_shift(output_array[1][:].astype(int), 16) # pylint: disable=assignment-from-no-return
-        b = np.left_shift(output_array[0][:].astype(int), 8) # pylint: disable=assignment-from-no-return    
-        w = output_array[2][:].astype(int)
-        rgbw = np.bitwise_or(np.bitwise_or(np.bitwise_or(r, g), b), w).astype(int)
+        w = np.left_shift(output_array[3][:].astype(int), 24) # pylint: disable=assignment-from-no-return
+        g = np.left_shift(output_array[1][:].astype(int), 16) # pylint: disable=assignment-from-no-return
+        r = np.left_shift(output_array[0][:].astype(int), 8) # pylint: disable=assignment-from-no-return    
+        b = output_array[2][:].astype(int)
+        rgbw = np.bitwise_or(np.bitwise_or(np.bitwise_or(w, r), g), b).astype(int)
 
         # You can only use ws2811_leds_set with the custom version.
         #ws.ws2811_leds_set(self.channel, rgb)
@@ -181,7 +181,7 @@ class Output:
 
     def clear(self):
         # Create a Array with only 0
-        pixels = np.array([[0 for i in range(900)] for i in range(3)]).astype(int)
+        pixels = np.array([[0 for i in range(900)] for i in range(4)]).astype(int)
         self.show(pixels)
 
     def fps_limiter(self):
