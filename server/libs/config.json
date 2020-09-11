@@ -7,12 +7,12 @@
     "device_config": {
         "LED_Brightness": 100,
         "LED_Channel": 0,
-        "LED_Count": 900,
+        "LED_Count": 236,
         "LED_Dma": 10,
         "LED_Freq_Hz": 800000,
         "LED_Invert": false,
         "LED_Pin": 21,
-        "LED_Mid": 450
+        "LED_Mid": 118
     },
 
     "audio_config": {
@@ -37,7 +37,7 @@
         "Light blue":[0,247,161,0],
         "Purple":[255,0,200,0],
         "Pink":[255,0,178,0],
-        "Warm White 255":[0,0,0,40],
+        "Warm White 255":[0,0,0,255],
         "Warm White 100":[0,0,0,100],
         "Warm White 50":[0,0,0,50],
         "Cold White":[255,255,255,0],
@@ -132,7 +132,7 @@
             "low_speed": 4
         },
         "effect_single": {
-            "color": "Blue"
+            "color": "Warm White 50"
         },
         "effect_spectrum": {
             "b_multiplier": 1,
