@@ -667,7 +667,7 @@ class Effects():
                     star_end_position = led_count - 1            
 
                 # Add the new rising star with a random color out of the gradient selection.
-                self.rising_stars.append([[gradient[selected_color_index][0], gradient[selected_color_index][1], gradient[selected_color_index][2]], [star_start_position, star_end_position], 1])
+                self.rising_stars.append([[gradient[selected_color_index][0], gradient[selected_color_index][1], gradient[selected_color_index][2], gradient[selected_color_index][3]], [star_start_position, star_end_position], 1])
 
         remove_stars_rising = []
 
